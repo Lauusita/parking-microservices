@@ -1,0 +1,13 @@
+com\micropropietario\control\CRUDController.class
+com\micropropietario\modelo\TypesPropietario$tipo_vehiculos_aceptados.class
+com\micropropietario\modelo\TypesPropietario$estado_reserva.class
+com\micropropietario\utildad\PropietarioHelper.class
+com\micropropietario\modelo\TypesPropietario$estado_historial.class
+com\micropropietario\modelo\PropietarioDTO.class
+com\micropropietario\servicio\PropietarioServicio.class
+com\micropropietario\modelo\TypesPropietario$tipo_documento.class
+com\micropropietario\dao\DatabaseConnection.class
+com\micropropietario\modelo\TypesPropietario.class
+com\micropropietario\modelo\RespuestaDTO.class
+com\gateway\cors\CORSFilter.class
+com\micropropietario\dao\PropietarioDAO.class
