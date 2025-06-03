@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Laura
  */
-@WebServlet(name = "CRUDController", urlPatterns = {"/propietario"})
+@WebServlet(name = "CRUDController", urlPatterns = {"/api"})
 public class CRUDController extends HttpServlet {
 
     private final Gson json = new GsonBuilder().setPrettyPrinting().create();
