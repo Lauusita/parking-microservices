@@ -20,7 +20,7 @@ public class FirebaseInitializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            String path = sce.getServletContext().getRealPath("/WEB-INF/parking-conductor-adminsdk.json");
+            String path = sce.getServletContext().getRealPath("/WEB-INF/parking-conductor-v1-firebase-adminsdk.json");
             
             FileInputStream serviceAcc = new FileInputStream(path);
             String databaseUrl = "https://parking-conductor-v1-default-rtdb.firebaseio.com/";
