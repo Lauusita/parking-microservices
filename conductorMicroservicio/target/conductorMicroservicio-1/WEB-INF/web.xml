@@ -9,8 +9,8 @@
         <listener-class>com.microconductor.config.FirebaseInitializer</listener-class>
     </listener>
     <servlet>
-        <servlet-name>Gateway</servlet-name>
-        <servlet-class>com.gateway.control.Gateway</servlet-class>
+        <servlet-name>CRUDController</servlet-name>
+        <servlet-class>com.microconductor.control.CRUDController</servlet-class>
     </servlet>
     <filter>
         <filter-name>CORSFilter</filter-name>

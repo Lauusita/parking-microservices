@@ -91,7 +91,7 @@ public class PropietarioDAO {
              PreparedStatement stm = conn.prepareStatement(sql);
 
              ResultSet result = stm.executeQuery();
-
+             System.out.println("llegaste o no pe causa");
              while (result.next()) {
                  PropietarioDTO propietario = new PropietarioDTO();
                  propietario.setIdPropietario(result.getString("id_propietario"));

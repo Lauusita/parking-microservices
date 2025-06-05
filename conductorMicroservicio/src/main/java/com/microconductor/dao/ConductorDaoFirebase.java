@@ -7,8 +7,6 @@ package com.microconductor.dao;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Filter;
-import com.google.firebase.database.DatabaseReference;
 import com.microconductor.modelo.ConductorDTO;
 import java.text.SimpleDateFormat;
 import java.util.Date;

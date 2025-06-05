@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author rojas
  */
-@WebServlet(name = "CRUDController", urlPatterns = {"/parqueadero"})
+@WebServlet(name = "CRUDController", urlPatterns = {"/api"})
 public class CRUDController extends HttpServlet {
 
     private final Gson json = new GsonBuilder().setPrettyPrinting().create();
@@ -57,6 +57,7 @@ public class CRUDController extends HttpServlet {
                 }
             } else {
                 List<ParqueaderoDTO> respons = new ParqueaderoServicio().get();
+                
                 if ( respons.isEmpty() ) {
                     response.setStatus(400);
                     RespuestaDTO respuesta = new RespuestaDTO("Datos no encontrados");
@@ -92,13 +93,11 @@ public class CRUDController extends HttpServlet {
                     (parq.getCiudad() == null || parq.getCiudad().isEmpty()) ||
                     (parq.getCalificacion() == null) ||
                     (parq.getDepartamento() == null || parq.getDepartamento().isEmpty()) ||
-                    (parq.getIdParqueadero() == null) ||
                     (parq.getNumeroCeldas() == null) ||
                     (parq.getTarifaHora() == null) ||
                     (parq.getHorarioAtencion() == null) ||
                     (parq.getEstado() == null) ||
                     (parq.getTiposVehiculosAceptados() == null) ||
-                    (parq.getCreatedAt() == null) ||
                     (parq.getIdPropietarioFk() == null);
                 
                 if (missingParameters) {

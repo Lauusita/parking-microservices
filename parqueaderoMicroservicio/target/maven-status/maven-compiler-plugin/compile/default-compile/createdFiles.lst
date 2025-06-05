@@ -1,2 +1,12 @@
-com\mycompany\parqueaderomicroservicio\JakartaRestConfiguration.class
-com\mycompany\parqueaderomicroservicio\resources\JakartaEE8Resource.class
+com\microparqueadero\control\CRUDController.class
+com\microparqueadero\modelo\TypesParqueadero$tipo_parqueadero.class
+com\microparqueadero\dao\DatabaseConnection.class
+com\microparqueadero\dao\ParqueaderoDAO.class
+com\microparqueadero\modelo\RespuestaDTO.class
+com\microparqueadero\modelo\TypesParqueadero$estado_parqueadero.class
+com\gateway\cors\CORSFilter.class
+com\microparqueadero\servicio\ParqueaderoServicio.class
+com\microparqueadero\modelo\TypesParqueadero$tipo_vehiculo_aceptado.class
+com\microparqueadero\modelo\ParqueaderoDTO.class
+com\microparqueadero\utilidad\ParqueaderoHelper.class
+com\microparqueadero\modelo\TypesParqueadero.class

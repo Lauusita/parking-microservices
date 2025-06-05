@@ -91,6 +91,8 @@ public class Gateway extends HttpServlet {
                 Thread.currentThread().interrupt();
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en la conexión con el microservicio.");
             }
+        } else if (path.contains("parqueadero")) {
+            
         }
     }
 
@@ -141,6 +143,51 @@ public class Gateway extends HttpServlet {
                Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (path.contains("/conductor")) {
+            String id = request.getParameter("id");
+            
+            if (id != null) {
+                url = url + "?id=" + id;
+            }
+            
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+            HttpResponse<String> res;
+        
+            try {
+               res = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+               response.setStatus(res.statusCode());
+               response.getWriter().write(res.body());
+               
+           } catch (InterruptedException ex) {
+               Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (path.contains("/parqueadero")) {
+            String id = request.getParameter("id");
+            
+            if (id != null) {
+                url = url + "?id=" + id;
+            }
+            
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+            HttpResponse<String> res;
+        
+            try {
+               res = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+               response.setStatus(res.statusCode());
+               response.getWriter().write(res.body());
+               
+           } catch (InterruptedException ex) {
+               Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -243,7 +290,7 @@ public class Gateway extends HttpServlet {
     }
     
     protected void headersConfig(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");

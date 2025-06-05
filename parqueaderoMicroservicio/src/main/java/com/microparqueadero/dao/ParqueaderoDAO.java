@@ -2,6 +2,7 @@ package com.microparqueadero.dao;
 
 import com.microparqueadero.modelo.ParqueaderoDTO;
 import com.microparqueadero.modelo.TypesParqueadero;
+import com.microparqueadero.utilidad.ParqueaderoHelper;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,13 +11,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.math.BigInteger;
 
 public class ParqueaderoDAO {
     private static final DatabaseConnection DB = new DatabaseConnection();
 
     public int create(ParqueaderoDTO parqueadero) {
-        String sql = "INSERT INTO parqueadero (id_parqueadero, nombre, direccion, ciudad, numero_celdas, tarifa_hora, horario_atencion, estado, calificacion, departamento, tipos_vehiculos_aceptados, created_at, id_propietario_fk) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO parqueadero (id_parqueadero, nombre, direccion, ciudad, numero_celdas, tarifa_hora, horario_atencion, estado, calificacion, departamento, tipos_vehiculos_aceptados, created_at, id_propietario_fk) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::tipos_vehiculos_aceptados, ?, ?)";
         int rowsAffected = 0;
 
         try {
@@ -36,7 +36,7 @@ public class ParqueaderoDAO {
             stm.setBoolean(8, parqueadero.getEstado());
             stm.setInt(9, parqueadero.getCalificacion());
             stm.setString(10, parqueadero.getDepartamento());
-            stm.setObject(11, parqueadero.getTiposVehiculosAceptados());
+            stm.setObject(11, parqueadero.getTiposVehiculosAceptados().name(), java.sql.Types.OTHER);
             stm.setDate(12, new Date(System.currentTimeMillis()));
             stm.setObject(13, UUID.fromString(parqueadero.getIdPropietarioFk().toString()), java.sql.Types.OTHER);
 
@@ -111,35 +111,42 @@ public class ParqueaderoDAO {
         return rowsAffected;
     }
 
-    public int update(String idParqueadero, ParqueaderoDTO parqueadero) {
+    public int update(String id, ParqueaderoDTO parqueadero) {
         int rowsAffected = 0;
+        
+        ParqueaderoHelper helper = new ParqueaderoHelper(parqueadero);
+        
+        List<String> campos = helper.getFieldsList();
+        List<Object> valores = helper.getFieldValuesList();
 
-        String sql = "UPDATE parqueadero SET nombre = ?, direccion = ?, ciudad = ?, numero_celdas = ?, tipo_celdas = ?, tarifa_hora = ?, horario_atencion = ?, estado = ?, calificacion = ?, departamento = ?, tipos_vehiculos_aceptados = ?, id_propietario_fk = ? WHERE id_parqueadero = ?::uuid";
+        StringBuilder setClause = new StringBuilder();
+        
+        for (int i = 0; i < campos.size(); i++) {
+            String campo = campos.get(i);
+            setClause.append(campo).append(" = ?");
+            if (i < campos.size() - 1) {
+                setClause.append(", ");
+            }    
+        }
+        
+        if (setClause.length() == 0) return 0; 
+        
+        String sql = "UPDATE parqueadero SET " + setClause.toString() + " WHERE id_parqueadero = ?::uuid";
 
         try {
             Connection conn = DB.connect();
-            PreparedStatement stm = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stm.setString(1, parqueadero.getNombre());
-            stm.setString(2, parqueadero.getDireccion());
-            stm.setString(3, parqueadero.getCiudad());
-            stm.setInt(4, parqueadero.getNumeroCeldas());
-            stm.setInt(5, parqueadero.getTarifaHora());
-            stm.setObject(6, parqueadero.getHorarioAtencion());
-            stm.setBoolean(7, parqueadero.getEstado());
-            stm.setInt(8, parqueadero.getCalificacion());
-            stm.setString(9, parqueadero.getDepartamento());
-            stm.setObject(10, parqueadero.getTiposVehiculosAceptados());
-            stm.setDate(11, new Date(System.currentTimeMillis()));
-            stm.setObject(12, UUID.fromString(parqueadero.getIdPropietarioFk().toString()), java.sql.Types.OTHER);
-            stm.setObject(13, idParqueadero, java.sql.Types.OTHER);
-
-            rowsAffected = stm.executeUpdate();
+            for (int i = 0; i < campos.size(); i++) {
+                stmt.setObject(i + 1, valores.get(i), java.sql.Types.OTHER);
+            }
+            stmt.setObject(valores.size() + 1, UUID.fromString(id), java.sql.Types.OTHER);
+        
+            rowsAffected = stmt.executeUpdate();
+            return rowsAffected;
+            
         } catch (Exception e) {
-            System.out.println("Error al actualizar parqueadero: " + e.getMessage());
-            e.printStackTrace();
         }
-
         return rowsAffected;
     }
 
@@ -151,7 +158,7 @@ public class ParqueaderoDAO {
         p.setCiudad(rs.getString("ciudad"));
         p.setNumeroCeldas(rs.getInt("numero_celdas"));
         p.setTarifaHora(rs.getInt("tarifa_hora"));
-        p.setHorarioAtencion(rs.getString("horario_atencion"));
+        p.setHorarioAtencion(rs.getObject("horario_atencion"));
         p.setEstado(rs.getBoolean("estado"));
         p.setCalificacion(rs.getInt("calificacion"));
         p.setDepartamento(rs.getString("departamento"));
