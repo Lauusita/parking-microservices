@@ -17,7 +17,6 @@ import com.google.gson.GsonBuilder;
 import com.microconductor.dao.ConductorDAO;
 import com.microconductor.dao.ConductorDAOFactory;
 import com.microconductor.modelo.RespuestaDTO;
-import com.microconductor.servicio.ConductorServicio;
 import com.microconductor.utilidad.ConductorHelper;
 import java.io.BufferedReader;
 import java.util.List;
@@ -169,7 +168,7 @@ public class CRUDController extends HttpServlet {
                 }
                 
                 int deleted = dao().delete(uid);
-                
+                System.out.println(deleted);
                 if (deleted == 0) {
                     response.setStatus(500);
                     respuesta = new RespuestaDTO("No se pudo eliminar");
@@ -179,7 +178,7 @@ public class CRUDController extends HttpServlet {
                 response.getWriter().write(jsonResponse);
 
     }
-
+    
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

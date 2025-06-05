@@ -14,8 +14,15 @@ import java.util.List;
 import java.util.UUID;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Laura
@@ -60,10 +67,7 @@ public class ConductorDaoFirebase implements ConductorDAO {
             DocumentSnapshot snapshot = collection.document(uid).get().get();
             
             if (snapshot.exists()) {
-                return snapshot.toObject(ConductorDTO.class);
-            } else {
-                System.out.println("No se encontró el conductor con ID: " + uid);
-                return null;
+                conductor = snapshot.toObject(ConductorDTO.class);
             }
         } catch (Exception e) {
         }
@@ -76,14 +80,12 @@ public class ConductorDaoFirebase implements ConductorDAO {
         try {
             CollectionReference collection = db.collection("Conductor");
             
-            DocumentSnapshot snapshot = collection.document(uid).get().get();
+            DocumentSnapshot snapshot = (DocumentSnapshot) collection.document(uid).get();
             
             if (snapshot.exists()) {
-                collection.document(uid).delete();
-                deleted = 1;
-            } else {
-                System.out.println("No se encontró el conductor con ID: " + uid);
-                return deleted;
+                ApiFuture<WriteResult> future = collection.document(uid).delete();
+                Boolean result = future.isDone();
+                if ( result == true ) deleted = 1;
             }
         } catch (Exception e) {
         }
@@ -126,6 +128,29 @@ public class ConductorDaoFirebase implements ConductorDAO {
 
     @Override
     public ConductorDTO findByCorreoAndPassword(String correo, String password) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ConductorDTO conductor = null;
+        
+        CollectionReference collection = db.collection("Conductor");
+        
+        Query query = collection
+                .whereEqualTo("correo", correo)
+                .whereEqualTo("contrasena", password);
+        
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<QueryDocumentSnapshot> documents;
+        
+        try {
+            documents = future.get().getDocuments();
+            
+            if (!documents.isEmpty()) {
+                conductor = (ConductorDTO) documents.get(0).toObject(ConductorDTO.class);
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ConductorDaoFirebase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(ConductorDaoFirebase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return conductor;
     }
 }

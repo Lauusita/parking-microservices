@@ -183,7 +183,6 @@ public class CRUDController extends HttpServlet {
             BufferedReader reader = request.getReader();
             String idPropietario = request.getParameter("id");
             
-            System.out.println("ase" + idPropietario);
             if (idPropietario == null) {
                 response.setStatus(400);
                 respuesta = new RespuestaDTO("Se debe proveer un id para actualizar.");
@@ -196,7 +195,7 @@ public class CRUDController extends HttpServlet {
             PropietarioDTO newBody = helper.getFilteredCopy();
             
             int updated = new PropietarioServicio().update(idPropietario, newBody);
-
+            System.out.println(newBody);
             if (updated == 0) {
                 response.setStatus(500);
                 respuesta = new RespuestaDTO("No se pudo actualizar");

@@ -106,7 +106,7 @@ public class CRUDController extends HttpServlet {
                 ReservaDTO reserva = json.fromJson(reader, ReservaDTO.class);
 
                 boolean missingParameters = 
-                    isNullOrEmpty(reserva.getNombreParqueadero()) ||
+                    reserva.getNombreParqueadero() == null ||
                     reserva.getTipoVehiculo() == null ||
                     reserva.getFechaReserva() == null ||
                     reserva.getHoraInicio() == null ||
@@ -120,7 +120,7 @@ public class CRUDController extends HttpServlet {
                   
                 if (missingParameters) {
                     response.setStatus(400);
-                    respuesta = new RespuestaDTO("Parámetros faltantes");
+                    respuesta = new RespuestaDTO("Parametros faltantes");
                     jsonResponse = json.toJson(respuesta);
                     response.getWriter().write(jsonResponse);
                     return;

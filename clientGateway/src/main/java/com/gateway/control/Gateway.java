@@ -92,7 +92,72 @@ public class Gateway extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en la conexión con el microservicio.");
             }
         } else if (path.contains("parqueadero")) {
+            String id = request.getParameter("id");
+            String id_propietario = request.getParameter("id_propietario");
+            String ciudad = request.getParameter("ciudad");
             
+            if (id != null) {
+                url = url + "?id=" + id;
+            }
+
+            if (id_propietario != null) {
+                url = url + "?id_propietario=" + id_propietario;
+            }
+            
+            if (ciudad != null) {
+                url = url + "?ciudad=" + ciudad;
+            }
+            
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+            try {
+                HttpResponse<String> res = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                
+                response.setStatus(res.statusCode());
+                response.setContentType("application/json"); 
+                response.getWriter().write(res.body()); 
+
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en la conexión con el microservicio.");
+            }
+        } else if (path.contains("reserva")) {
+            String id = request.getParameter("id");
+            String conductor_id = request.getParameter("conductor_id");
+            String parqueadero_id = request.getParameter("parqueadero_id");
+            
+            if (id != null) {
+                url = url + "?id=" + id;
+            }
+
+            if (conductor_id != null) {
+                url = url + "?conductor_id=" + conductor_id;
+            }
+            
+            if (parqueadero_id != null) {
+                url = url + "?parqueadero_id=" + parqueadero_id;
+            }
+            
+            
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+            try {
+                HttpResponse<String> res = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                
+                response.setStatus(res.statusCode());
+                response.setContentType("application/json"); 
+                response.getWriter().write(res.body()); 
+
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en la conexión con el microservicio.");
+            }
         }
     }
 
@@ -120,6 +185,7 @@ public class Gateway extends HttpServlet {
         String body = request.getReader().lines().collect(Collectors.joining());
         
         if (path.contains("/propietario")) {
+            System.out.println("--" +  url);
             String id = request.getParameter("id");
             
             if (id != null) {
@@ -167,10 +233,57 @@ public class Gateway extends HttpServlet {
             }
         } else if (path.contains("/parqueadero")) {
             String id = request.getParameter("id");
+            String id_propietario = request.getParameter("id_propietario");
+            String ciudad = request.getParameter("ciudad");
             
             if (id != null) {
                 url = url + "?id=" + id;
             }
+
+            if (id_propietario != null) {
+                url = url + "?id_propietario=" + id_propietario;
+            }
+            
+            if (ciudad != null) {
+                url = url + "?ciudad=" + ciudad;
+            }
+            
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+            HttpResponse<String> res;
+        
+            try {
+               res = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+               response.setStatus(res.statusCode());
+               response.getWriter().write(res.body());
+               
+           } catch (InterruptedException ex) {
+               Logger.getLogger(Gateway.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        else if (path.contains("/reserva")) {
+            
+            System.out.println(url);
+            String id = request.getParameter("id");
+            String conductor_id = request.getParameter("conductor_id");
+            String parqueadero_id = request.getParameter("parqueadero_id");
+            
+            if (id != null) {
+                url = url + "?id=" + id;
+            }
+
+            if (conductor_id != null) {
+                url = url + "?conductor_id=" + conductor_id;
+            }
+            
+            if (parqueadero_id != null) {
+                url = url + "?parqueadero_id=" + parqueadero_id;
+            }
+            
             
             HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(url))
