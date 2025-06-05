@@ -13,7 +13,7 @@ import java.util.List;
  * @author rojas
  */
 public class ParqueaderoServicio {
-     private static final ParqueaderoDAO parq = new ParqueaderoDAO();
+    private static final ParqueaderoDAO parq = new ParqueaderoDAO();
     
     public List<ParqueaderoDTO> get() {
         return parq.get();
@@ -33,5 +33,13 @@ public class ParqueaderoServicio {
     
     public int update(String id, ParqueaderoDTO campos){
         return parq.update(id, campos);
+    }
+    
+    public List<ParqueaderoDTO> getByPropietario(String propietario_id) {
+        return parq.getParqueaderoByPropietario(propietario_id);
+    }
+    
+    public List<ParqueaderoDTO> getByCiudad(String ciudad) {
+        return parq.getParqueaderoByCiudad(ciudad);
     }
 }

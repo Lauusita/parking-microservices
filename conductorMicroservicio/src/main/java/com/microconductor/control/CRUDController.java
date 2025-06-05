@@ -33,7 +33,7 @@ public class CRUDController extends HttpServlet {
     private final String url = "http://localhost:4200";
     
     protected ConductorDAO dao() {   
-        ConductorDAO dao = ConductorDAOFactory.getDAO("postgres");
+        ConductorDAO dao = ConductorDAOFactory.getDAO("firebase");
         return dao;
     }
 

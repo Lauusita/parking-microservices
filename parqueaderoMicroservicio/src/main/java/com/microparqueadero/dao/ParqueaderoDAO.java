@@ -150,6 +150,48 @@ public class ParqueaderoDAO {
         return rowsAffected;
     }
 
+    public List<ParqueaderoDTO> getParqueaderoByPropietario(String id_propietario) {
+        List<ParqueaderoDTO> parqueaderos = new ArrayList<>();
+        String sql = "SELECT * FROM parqueadero WHERE id_propietario_fk = ?";
+        
+        try {
+            Connection conn = DB.connect();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            
+            stm.setObject(1, UUID.fromString(id_propietario));
+            ResultSet rs = stm.executeQuery();
+            
+            while (rs.next()) {
+                parqueaderos.add(mapResultToDTO(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return parqueaderos;
+    }
+    
+    public List<ParqueaderoDTO> getParqueaderoByCiudad(String ciudad) {
+        List<ParqueaderoDTO> parqueaderos = new ArrayList<>();
+        String sql = "SELECT * FROM parqueadero WHERE ciudad = ?";
+        
+        try {
+            Connection conn = DB.connect();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            
+            stm.setString(1, ciudad);
+            ResultSet rs = stm.executeQuery();
+            
+            while (rs.next()) {
+                parqueaderos.add(mapResultToDTO(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return parqueaderos;
+    }
+    
     private ParqueaderoDTO mapResultToDTO(ResultSet rs) throws Exception {
         ParqueaderoDTO p = new ParqueaderoDTO();
         p.setIdParqueadero(rs.getString("id_parqueadero"));

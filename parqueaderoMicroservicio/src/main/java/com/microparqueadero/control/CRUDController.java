@@ -40,9 +40,39 @@ public class CRUDController extends HttpServlet {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             
             String uid = request.getParameter("id");
+            String id_propietario = request.getParameter("id_propietario");
+            String ciudad = request.getParameter("ciudad");
             
             if (uid != null) {
                 ParqueaderoDTO respons = new ParqueaderoServicio().getById(uid);
+            
+                if ( respons == null ) {
+                    response.setStatus(400);
+                    RespuestaDTO respuesta = new RespuestaDTO("Datos no encontrados");
+                    jsonResponse = json.toJson(respuesta);
+                    response.getWriter().write(jsonResponse);
+
+                } else {
+                    jsonResponse = json.toJson(respons);
+                    response.setStatus(200);
+                    response.getWriter().write(jsonResponse);
+                }
+            } else if (id_propietario != null) {
+                List<ParqueaderoDTO> respons = new ParqueaderoServicio().getByPropietario(id_propietario);
+            
+                if ( respons == null ) {
+                    response.setStatus(400);
+                    RespuestaDTO respuesta = new RespuestaDTO("Datos no encontrados");
+                    jsonResponse = json.toJson(respuesta);
+                    response.getWriter().write(jsonResponse);
+
+                } else {
+                    jsonResponse = json.toJson(respons);
+                    response.setStatus(200);
+                    response.getWriter().write(jsonResponse);
+                }
+            } else if (ciudad != null ) {
+                List<ParqueaderoDTO> respons = new ParqueaderoServicio().getByCiudad(ciudad);
             
                 if ( respons == null ) {
                     response.setStatus(400);
